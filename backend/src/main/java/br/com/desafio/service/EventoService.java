@@ -33,7 +33,7 @@ public class EventoService {
                 .dataInicial(eventoDTO.getDataInicial())
                 .dataFinal(eventoDTO.getDataFinal())
                 .instituicao(instituicaoMapper.toEntity(eventoDTO.getInstituicao()))
-                .ativo(false)
+                .ativo(eventoDTO.getDataInicial().isEqual(LocalDate.now()))
                 .build();
 
         evento = eventoRepository.save(evento);
@@ -59,18 +59,11 @@ public class EventoService {
 
         Evento evento = eventoRepository.findById(eventoId).orElseThrow(() -> new RuntimeException("Evento não encontrado"));
 
-        if (Objects.nonNull(eventoDTO.getNome())) {
-            evento.setNome(eventoDTO.getNome());
-        }
-        if (Objects.nonNull(eventoDTO.getDataInicial())) {
-            evento.setDataInicial(eventoDTO.getDataInicial());
-        }
-        if (Objects.nonNull(eventoDTO.getDataFinal())) {
-            evento.setDataFinal(eventoDTO.getDataFinal());
-        }
-        if (Objects.nonNull(eventoDTO.getInstituicao())) {
-            evento.setInstituicao(instituicaoMapper.toEntity(eventoDTO.getInstituicao()));
-        }
+        evento.setNome(eventoDTO.getNome());
+        evento.setDataInicial(eventoDTO.getDataInicial());
+        evento.setDataFinal(eventoDTO.getDataFinal());
+        evento.setInstituicao(instituicaoMapper.toEntity(eventoDTO.getInstituicao()));
+        evento.setAtivo(eventoDTO.getDataInicial().isEqual(LocalDate.now()));
 
         eventoRepository.save(evento);
 
@@ -85,15 +78,34 @@ public class EventoService {
         if (eventoDTO.getDataInicial().isAfter(eventoDTO.getDataFinal())) {
             throw new RuntimeException("Data inicial não pode ser maior que a data final");
         }
+        if (eventoDTO.getDataInicial().isEqual(eventoDTO.getDataFinal())) {
+            throw new RuntimeException("Data inicial não pode ser igual a data final");
+        }
         if (eventoDTO.getDataInicial().isBefore(LocalDate.now())) {
             throw new RuntimeException("Data inicial não pode ser menor que a data atual");
         }
-        if (eventoDTO.getDataFinal().isBefore(LocalDate.now())) {
-            throw new RuntimeException("Data final não pode ser menor que a data atual");
+        if (eventoDTO.getDataFinal().isBefore(LocalDate.now()) || eventoDTO.getDataFinal().isEqual(LocalDate.now())) {
+            throw new RuntimeException("Data final não pode ser menor ou igual a data atual");
         }
         if (Objects.isNull(eventoDTO.getInstituicao().getId())) {
             throw new RuntimeException("Instituição é obrigatória");
         }
+    }
+
+    public void ativarEvento() {
+        List<Evento> eventoList = eventoRepository.findByDataInicial(LocalDate.now());
+        eventoList.forEach(evento -> {
+            evento.setAtivo(true);
+            eventoRepository.save(evento);
+        });
+    }
+
+    public void desativarEvento() {
+        List<Evento> eventoList = eventoRepository.findByDataFinal(LocalDate.now());
+        eventoList.forEach(evento -> {
+            evento.setAtivo(false);
+            eventoRepository.save(evento);
+        });
     }
 
 }

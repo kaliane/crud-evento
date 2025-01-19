@@ -1,22 +1,34 @@
 import React from 'react';
-import './home.css';
-import {Link} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
+import {Stack, Typography} from "@mui/material";
+import Button from "@mui/material/Button";
 export default function Home() {
+
+    const navigate = useNavigate();
+
+    const pageInstituicao = () => {
+        navigate(`/instituicao`);
+    }
+
+    const pageEvento = () => {
+        navigate(`/evento`);
+    }
+
     return (
         <div className = "profile-container">
             <header>
-                <span>
-                    <h1>CRUD Eventos</h1>
-                </span>
+                <Typography variant="h1" gutterBottom>
+                    CRUD Eventos
+                </Typography>
             </header>
-            <ul>
-                <li>
-                    <Link className="button" to="/institution">Instituição</Link>
-                </li>
-                <li>
-                    <Link className="button" to="/event">Evento</Link>
-                </li>
-            </ul>
+            <Stack spacing={2} direction="row">
+                <Button variant="contained" onClick={pageInstituicao}>
+                    Instituição
+                </Button>
+                <Button variant="contained" onClick={pageEvento}>
+                    Evento
+                </Button>
+            </Stack>
         </div>
     );
 }

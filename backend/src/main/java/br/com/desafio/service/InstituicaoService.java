@@ -44,12 +44,8 @@ public class InstituicaoService {
     public InstituicaoDTO updateInstituicao(Integer instituicaoId, InstituicaoDTO instituicaoDTO) {
         Instituicao instituicao = instituicaoRepository.findById(instituicaoId).orElseThrow(() -> new RuntimeException("Instituição não encontrada"));
 
-        if (Objects.nonNull(instituicaoDTO.getNome())) {
-            instituicao.setNome(instituicaoDTO.getNome());
-        }
-        if (Objects.nonNull(instituicaoDTO.getTipo())){
-            instituicao.setTipo(instituicaoDTO.getTipo());
-        }
+        instituicao.setNome(instituicaoDTO.getNome());
+        instituicao.setTipo(instituicaoDTO.getTipo());
 
         instituicaoRepository.save(instituicao);
 
