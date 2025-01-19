@@ -41,7 +41,7 @@ Ao clicar em **INSTITUIÇÃO** é redirecionado para a tela de listagem de insti
 
 ![Tela de Instituições](imagens/instituicoes.png)
 
-Ao clicar em **ADICIOANR NOVA INSTITUIÇÃO** é redirecionado para a tela de cadastro de instituição.
+Ao clicar em **ADICIONAR NOVA INSTITUIÇÃO** é redirecionado para a tela de cadastro de instituição.
 
 ![Tela de Cadastro de Instituições](imagens/novaInstituicao.png)
 
